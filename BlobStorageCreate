@@ -41,7 +41,7 @@ namespace RaiseBlobStorage
                 // Create a container called 'quickstartblobs' and 
                 // append a GUID value to it to make the name unique.
                 CloudBlobContainer cloudBlobContainer =
-                    cloudBlobClient.GetContainerReference("quickstartblobs" +
+                    cloudBlobClient.GetContainerReference("raiseblobs" +
                         Guid.NewGuid().ToString());
                 cloudBlobContainer.Create();
               
