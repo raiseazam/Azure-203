@@ -33,7 +33,7 @@ namespace RaiseBlobPermission
                 // append a GUID value to it to make the name unique.
                 CloudBlobClient cloudBlobClient = storageAccount.CreateCloudBlobClient();
                 CloudBlobContainer cloudBlobContainer =
-                    cloudBlobClient.GetContainerReference("quickstartblobsa52d6c6e-695f-4319-a5a7-30ccf472df20");
+                    cloudBlobClient.GetContainerReference("xxxxxxxxxxxxxxxxxxxxxxxxxxxxx");//Enter Blob Container Name
                 BlobContainerPermissions permissions = new BlobContainerPermissions
                 {
                     PublicAccess = BlobContainerPublicAccessType.Blob
