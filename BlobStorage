@@ -10,9 +10,9 @@ namespace RaiseBlobPermission
     {
         public static void Main()
         {
-            // Console.WriteLine("Azure Blob Storage -Granting Permission To Blob");
-            //GrantPermissionRaiseBlobStorage();
-            //  ListRaiseBlobs();
+       
+            GrantPermissionRaiseBlobStorage();
+              ListRaiseBlobs();
             DeleteRaiseBlobs();
         }
         public static void GrantPermissionRaiseBlobStorage()
@@ -56,7 +56,7 @@ namespace RaiseBlobPermission
 
             CloudBlobClient cloudBlobClient = storageAccount.CreateCloudBlobClient();
             CloudBlobContainer cloudBlobContainer =
-                cloudBlobClient.GetContainerReference("quickstartblobsa52d6c6e-695f-4319-a5a7-30ccf472df20");
+               cloudBlobClient.GetContainerReference("xxxxxxxxxxxxxxxxxxxxxxxxxxxxx");//Enter Blob Container Name
             BlobContinuationToken blobContinuationToken = null;
             do
             {
@@ -87,7 +87,7 @@ namespace RaiseBlobPermission
 
             CloudBlobClient cloudBlobClient = storageAccount.CreateCloudBlobClient();
             CloudBlobContainer cloudBlobContainer =
-                cloudBlobClient.GetContainerReference("quickstartblobsa52d6c6e-695f-4319-a5a7-30ccf472df20");
+                  cloudBlobClient.GetContainerReference("xxxxxxxxxxxxxxxxxxxxxxxxxxxxx");//Enter Blob Container Name
             Console.WriteLine("Deleting the container");
             if (cloudBlobContainer != null)
             {
@@ -95,8 +95,7 @@ namespace RaiseBlobPermission
             }
 
 
-        }// Loop while the continuation token is not null.
-    }
+        }
 }
 
 
