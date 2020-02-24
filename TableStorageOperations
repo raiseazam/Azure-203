@@ -1,0 +1,153 @@
+using System;
+using System.Threading.Tasks;
+using Microsoft.Azure.Cosmos.Table;
+using Microsoft.Azure.Documents;
+using StorageTable.Model;
+
+namespace StorageTable
+{
+    public static class TestGlobalVariable
+    {
+        public static string storageConnectionString = "####################";
+        public static string PartitionKey = "Azure Developer";
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Azure Raise Table Storage -\n");
+            // CreateRaiseTableStorage();
+            //InsertTableEntity();
+            // UpdateTableEntity();
+            // Query();
+            InsertTableBatchEntity();
+            Console.WriteLine("Press any key to exit the sample application.");
+
+            Console.ReadLine();
+        }
+        public static void CreateRaiseTableStorage()
+
+        {
+          
+
+            CloudStorageAccount storageAccount;
+
+            if (CloudStorageAccount.TryParse(TestGlobalVariable.storageConnectionString, out storageAccount))
+            {
+                // Create a table client for interacting with the table service
+                CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
+
+
+                CloudTable table = tableClient.GetTableReference("raisetable1234");
+                if (table.CreateIfNotExists())
+                {
+                    Console.WriteLine("Created Table Name: " + table.Name);
+                }
+                else
+                {
+
+                    Console.WriteLine("Table {0} already exists", table.Name);
+
+
+                }
+
+            }
+        }
+        public static void InsertTableBatchEntity()
+        {
+            CloudStorageAccount storageAccount;
+
+            if (CloudStorageAccount.TryParse(TestGlobalVariable.storageConnectionString, out storageAccount))
+            {
+                // Create a table client for interacting with the table service
+                CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
+                CloudTable cloudTable = tableClient.GetTableReference("raisetable1234");
+
+                TableBatchOperation batch = new TableBatchOperation();
+                CustomerEntity entity1 = new CustomerEntity("Azure Developer", "userA");
+                entity1.Price = 10;
+                CustomerEntity entity2 = new CustomerEntity("Azure Developer", "userB");
+                entity2.Price = 20;
+                CustomerEntity entity3 = new CustomerEntity("Azure Developer", "userC");
+                entity3.Price = 30;
+                batch.Insert(entity1);
+                batch.Insert(entity2);
+                batch.Insert(entity3);
+                cloudTable.ExecuteBatch(batch);
+                Console.WriteLine("Records Inserted");
+
+          }
+        }
+        public static void InsertTableEntity()
+        {
+            CloudStorageAccount storageAccount;
+
+            if (CloudStorageAccount.TryParse(TestGlobalVariable.storageConnectionString, out storageAccount))
+            {
+                // Create a table client for interacting with the table service
+                CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
+
+
+                CloudTable cloudTable = tableClient.GetTableReference("raisetable1234");
+                CustomerEntity entity = new CustomerEntity("Azure Developer", "Raise");
+                entity.Price = 100;
+                TableOperation insertOperation = TableOperation.InsertOrMerge(entity);
+                TableResult result = cloudTable.Execute(insertOperation);
+                CustomerEntity insertedCustomer = result.Result as CustomerEntity;
+                Console.WriteLine("Entity Added");
+                Console.WriteLine("Partition Key: " + insertedCustomer.PartitionKey);
+                Console.WriteLine("Row Key: " + insertedCustomer.RowKey);
+                Console.WriteLine("Time the Table was last Modified " + insertedCustomer.Timestamp);
+
+
+            }
+        }
+
+        public static void UpdateTableEntity()
+        {
+            CloudStorageAccount storageAccount;
+
+            if (CloudStorageAccount.TryParse(TestGlobalVariable.storageConnectionString, out storageAccount))
+            {
+                // Create a table client for interacting with the table service
+                CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
+                CloudTable cloudTable = tableClient.GetTableReference("raisetable1234");
+                CustomerEntity entity = new CustomerEntity("Azure Developer", "Raise");
+                entity.Price = 500;
+                TableOperation updateOperation = TableOperation.Merge(entity); 
+                TableResult result = cloudTable.Execute(updateOperation);
+                CustomerEntity updatedCustomer = result.Result as CustomerEntity;
+                Console.WriteLine("Entity Updated");
+                Console.WriteLine("Partition Key: " + updatedCustomer.PartitionKey);
+                Console.WriteLine("Row Key: " + updatedCustomer.RowKey);
+                Console.WriteLine("Time the Table was last Modified " + updatedCustomer.Timestamp);
+
+
+            }
+            }
+        public static void Query()
+        {
+            CloudStorageAccount storageAccount;
+
+            if (CloudStorageAccount.TryParse(TestGlobalVariable.storageConnectionString, out storageAccount))
+            {
+                // Create a table client for interacting with the table service
+                CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
+                CloudTable cloudTable = tableClient.GetTableReference("raisetable1234");
+
+                TableQuery<CustomerEntity> CustomerQuery = new TableQuery<CustomerEntity>().Where(
+                TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "Azure Developer"
+                ));//Important point to note here PartitionKey is not a variable but a keyword applicable for TableQuery Class
+                var itemlist = cloudTable.ExecuteQuery(CustomerQuery);
+                foreach (CustomerEntity obj in itemlist)
+                {
+                    Console.WriteLine("The Course Name is " + obj.PartitionKey);
+                    Console.WriteLine("The User Name is " + obj.RowKey);
+                    Console.WriteLine("The Price is " + obj.Price);
+                }
+            }
+        }
+
+
+    }
+}
