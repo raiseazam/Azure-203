@@ -1,0 +1,40 @@
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Azure.Management.Sql.Fluent;
+using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
+
+namespace SQLDatabse
+{
+    class Program
+    {
+
+        static void Main(string[] args)
+        {
+
+            string connectionString ="###############################";
+
+            // Best practice is to scope the SqlConnection to a "using" block
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                // Connect to the database
+                conn.Open();
+
+                // Read rows
+                SqlCommand selectCommand = new SqlCommand("SELECT TOP 5 ProductID, Name, ProductNumber from SalesLT.Product", conn);
+                SqlDataReader results = selectCommand.ExecuteReader();
+
+                // Enumerate over the rows
+                while (results.Read())
+                {
+                    Console.WriteLine("Column 0: {0} Column 1: {1}", results[0], results[1]);
+                }
+            }
+        }
+
+
+    }
+}
